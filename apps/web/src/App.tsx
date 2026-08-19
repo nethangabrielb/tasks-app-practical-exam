@@ -67,6 +67,28 @@ const App = () => {
     },
   });
 
+  // mutation for updating task status
+  const updateTaskStatusMutation = useMutation({
+    mutationFn: async (task: Task) => {
+      const res = await fetch(`/api/tasks/${task.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status: task.status === "INCOMPLETE" ? "COMPLETED" : "INCOMPLETE",
+        }),
+      });
+      if (!res.ok) {
+        throw new Error("Failed to update task status");
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+  });
+
   const statusStyle = (status: string) => {
     switch (status) {
       case "INCOMPLETE":
@@ -135,7 +157,10 @@ const App = () => {
           {data?.data?.map((task: Task) => (
             <div key={task.id} className="w-full p-2 border-b last:border-b-0">
               <div className="flex items-center gap-4">
-                <Checkbox checked={task.status === "COMPLETED"} />
+                <Checkbox
+                  checked={task.status === "COMPLETED"}
+                  onCheckedChange={() => updateTaskStatusMutation.mutate(task)}
+                />
                 <div className="flex flex-col gap-1 w-full">
                   <div className="flex gap-2 w-fit">
                     <CardTitle
