@@ -1,14 +1,21 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { SearchTasks } from "@/components/search-tasks";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Task } from "@repo/validators";
 import { Spinner } from "@/components/ui/spinner";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { toast } from "sonner";
+
 const App = () => {
+  const queryClient = useQueryClient();
+
+  // new task state
+  const [newTask, setNewTask] = useState({ name: "", description: "" });
+
   // state for search and filter
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<"ALL" | "INCOMPLETE" | "COMPLETED">(
@@ -16,7 +23,7 @@ const App = () => {
   );
 
   // query for tasks
-  const { data, isPending, error } = useQuery({
+  const { data, isPending } = useQuery({
     queryKey: ["tasks", filter, search],
     queryFn: async () => {
       const params = new URLSearchParams();
@@ -36,6 +43,27 @@ const App = () => {
         throw new Error("Failed to fetch tasks");
       }
       return res.json();
+    },
+  });
+
+  // mutation for adding new tasks
+  const addTaskMutation = useMutation({
+    mutationFn: async (newTask: { name: string; description: string }) => {
+      const res = await fetch("/api/tasks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newTask),
+      });
+      if (!res.ok) {
+        throw new Error("Failed to add task");
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      toast.success("Task added successfully");
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
 
@@ -63,8 +91,30 @@ const App = () => {
         </div>
 
         {/* add task input */}
-        <form className="flex w-full items-center gap-2">
-          <Input placeholder="Add a task..." />
+        <form
+          className="flex w-full items-center gap-2"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!newTask.name.trim()) {
+              toast.error("Task name is required");
+              return;
+            }
+            addTaskMutation.mutate(newTask);
+            setNewTask({ name: "", description: "" });
+          }}
+        >
+          <Input
+            placeholder="Add a task..."
+            value={newTask.name}
+            onChange={(e) => setNewTask({ ...newTask, name: e.target.value })}
+          />
+          <Input
+            placeholder="Description"
+            value={newTask.description}
+            onChange={(e) =>
+              setNewTask({ ...newTask, description: e.target.value })
+            }
+          />
           <Button type="submit">Add</Button>
         </form>
 
