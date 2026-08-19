@@ -1,26 +1,59 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
+import type { CreateTaskDto, UpdateTaskDto } from '@repo/validators';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class TasksService {
-  create(createTaskDto: CreateTaskDto) {
-    return 'This action adds a new task';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(createTaskDto: CreateTaskDto) {
+    const task = await this.prisma.client.task.create({
+      data: createTaskDto,
+    });
+    if (!task) {
+      throw new Error('Failed to create task');
+    }
+    return task;
   }
 
-  findAll() {
-    return `This action returns all tasks`;
+  async findAll() {
+    const tasks = await this.prisma.client.task.findMany();
+    if (!tasks) {
+      throw new Error('Failed to find tasks');
+    }
+    return tasks;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} task`;
+  async findOne(id: number) {
+    const task = await this.prisma.client.task.findUnique({
+      where: {
+        id,
+      },
+    });
+    if (!task) {
+      throw new Error('Failed to find task');
+    }
+    return task;
   }
 
-  update(id: number, updateTaskDto: UpdateTaskDto) {
-    return `This action updates a #${id} task`;
+  async update(id: number, updateTaskDto: UpdateTaskDto) {
+    const task = await this.prisma.client.task.update({
+      where: {
+        id,
+      },
+      data: updateTaskDto,
+    });
+    if (!task) {
+      throw new Error('Failed to update task');
+    }
+    return task;
   }
 
   remove(id: number) {
-    return `This action removes a #${id} task`;
+    return this.prisma.client.task.delete({
+      where: {
+        id,
+      },
+    });
   }
 }

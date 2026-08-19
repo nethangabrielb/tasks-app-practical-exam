@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto, createTaskSchema } from '@repo/validators';
-import { UpdateTaskDto } from './dto/update-task.dto';
+import { UpdateTaskDto } from '@repo/validators';
 import { ZodValidationPipe } from '../common/pipes/zod-validation.pipe';
 
 @Controller('tasks')
