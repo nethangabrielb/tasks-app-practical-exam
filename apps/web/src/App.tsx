@@ -70,7 +70,7 @@ const App = () => {
   const statusStyle = (status: string) => {
     switch (status) {
       case "INCOMPLETE":
-        return "text-neutral bg-neutral p-1 rounded-md";
+        return "text-muted-foreground bg-muted p-1 rounded-md";
       case "COMPLETED":
         return "text-green-700 bg-green-100 p-1 rounded-md";
     }
