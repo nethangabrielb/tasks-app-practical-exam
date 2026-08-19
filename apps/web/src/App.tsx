@@ -9,8 +9,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { toast } from "sonner";
-import { SquarePen, Trash } from "lucide-react";
 import { DeleteDialog } from "@/components/delete-dialog";
+import { EditDialog } from "@/components/edit-dialog";
 
 const App = () => {
   const queryClient = useQueryClient();
@@ -209,13 +209,7 @@ const App = () => {
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                <SquarePen
-                  size="16"
-                  className="cursor-pointer text-muted-foreground"
-                  onClick={() => {
-                    updateTaskMutation.mutate(task.id);
-                  }}
-                ></SquarePen>
+                <EditDialog task={task} />
                 <DeleteDialog
                   deleteTaskMutation={deleteTaskMutation}
                   taskId={task.id}
