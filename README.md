@@ -46,12 +46,13 @@ Open `packages/database/.env` and update your PostgreSQL connection string:
 DATABASE_URL="postgresql://postgres:password@localhost:5432/tasks_db"
 ```
 
-### 3. Run Database Migrations
+### 3. Setup Database
 
-Generate the Prisma client and apply migrations:
+Apply database migrations and generate the Prisma client:
 
 ```bash
 pnpm db:migrate
+pnpm db:generate
 ```
 
 ### 4. Start the Application
@@ -75,7 +76,8 @@ pnpm dev
 | `pnpm dev:api` | Starts only the NestJS API |
 | `pnpm dev:web` | Starts only the Vite React app |
 | `pnpm build` | Builds all packages and apps for production |
-| `pnpm db:migrate` | Runs Prisma migrations in development |
+| `pnpm db:migrate` | Applies Prisma migrations in development |
+| `pnpm db:generate` | Generates the Prisma client |
 | `pnpm db:studio` | Opens Prisma Studio in browser to view/edit database records |
 | `pnpm lint` | Runs linter across all packages |
 
