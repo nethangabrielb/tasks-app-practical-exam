@@ -19,3 +19,15 @@ model User {
   name      String?
   createdAt DateTime @default(now())
 }
+
+model Task {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  status      Status  @default(INCOMPLETE)
+}
+
+enum Status {
+  INCOMPLETE
+  COMPLETED
+}
