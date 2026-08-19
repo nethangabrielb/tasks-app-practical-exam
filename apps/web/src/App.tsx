@@ -108,7 +108,7 @@ const App = () => {
         <div className="flex flex-col gap-1">
           <h1 className="text-xl font-medium">Tasks</h1>
           <p className="text-muted-foreground">
-            {totalTasks} out of {completedTasks} tasks completed
+            {completedTasks} out of {totalTasks} tasks completed
           </p>
         </div>
 
