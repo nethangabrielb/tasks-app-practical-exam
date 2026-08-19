@@ -9,6 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { toast } from "sonner";
+import { SquarePen, Trash } from "lucide-react";
 
 const App = () => {
   const queryClient = useQueryClient();
@@ -155,7 +156,10 @@ const App = () => {
             </div>
           )}
           {data?.data?.map((task: Task) => (
-            <div key={task.id} className="w-full p-2 border-b last:border-b-0">
+            <div
+              key={task.id}
+              className="w-full py-2 px-4 border-b last:border-b-0 flex justify-between"
+            >
               <div className="flex items-center gap-4">
                 <Checkbox
                   checked={task.status === "COMPLETED"}
@@ -185,6 +189,16 @@ const App = () => {
                     </p>
                   </CardContent>
                 </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <SquarePen
+                  size="16"
+                  className="cursor-pointer text-muted-foreground"
+                ></SquarePen>
+                <Trash
+                  size="16"
+                  className="cursor-pointer text-muted-foreground"
+                ></Trash>
               </div>
             </div>
           ))}
