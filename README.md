@@ -2,6 +2,8 @@
 
 A full-stack task management application built with NestJS, React, PostgreSQL, and Prisma in a pnpm monorepo.
 
+<img width="660" height="546" alt="image" src="https://github.com/user-attachments/assets/cb4dcb54-baa3-4758-bc74-f0ac55d16a50" />
+
 ---
 
 ## Tech Stack
