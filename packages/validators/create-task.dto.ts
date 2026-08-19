@@ -9,3 +9,4 @@ export const createTaskSchema = z.object({
 });
 
 export type CreateTaskDto = z.infer<typeof createTaskSchema>;
+export type TaskStatus = z.infer<typeof TaskStatus>;

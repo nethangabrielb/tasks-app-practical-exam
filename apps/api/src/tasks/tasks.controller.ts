@@ -7,11 +7,13 @@ import {
   Param,
   Delete,
   UsePipes,
+  Query,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto, createTaskSchema } from '@repo/validators';
 import { UpdateTaskDto } from '@repo/validators';
 import { ZodValidationPipe } from '../common/pipes/zod-validation.pipe';
+import type { TaskStatus } from '@repo/validators';
 
 @Controller('tasks')
 export class TasksController {
@@ -24,8 +26,11 @@ export class TasksController {
   }
 
   @Get()
-  findAll() {
-    return this.tasksService.findAll();
+  findAll(
+    @Query('status') status?: TaskStatus,
+    @Query('search') search?: string,
+  ) {
+    return this.tasksService.findAll(status, search);
   }
 
   @Get(':id')
