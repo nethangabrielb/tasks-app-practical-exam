@@ -1,0 +1,21 @@
+{
+  "name": "vite-nestjs-template",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "packageManager": "pnpm@11.20.0",
+  "scripts": {
+    "dev": "pnpm --filter @repo/database db:generate && pnpm --filter @repo/database build && pnpm --filter @repo/validators build && pnpm --parallel --filter \"./apps/*\" dev",
+    "dev:api": "pnpm --filter api dev",
+    "dev:web": "pnpm --filter web dev",
+    "build": "pnpm --filter @repo/database db:generate && pnpm --filter @repo/database build && pnpm --filter @repo/validators build && pnpm --recursive --filter \"./apps/*\" build",
+    "db:migrate": "pnpm --filter @repo/database db:migrate",
+    "db:studio": "pnpm --filter @repo/database db:studio",
+    "lint": "pnpm --recursive lint",
+    "format": "prettier --write ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

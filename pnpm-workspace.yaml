@@ -1,0 +1,27 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+autoInstallPeers: true
+strictPeerDependencies: false
+
+catalog:
+  typescript: ^5.9.3
+  zod: ^3.24.0
+
+catalogs:
+  prisma:
+    prisma: latest
+    "@prisma/client": latest
+
+# pnpm 11 blocks postinstall/install/preinstall scripts from dependencies
+# unless explicitly allowed. This stack needs these approved or `pnpm install`
+# will silently skip steps that Prisma and Nest's compiler rely on.
+allowBuilds:
+  "@prisma/client": true
+  "@prisma/engines": true
+  prisma: true
+  "@nestjs/core": true
+  "@swc/core": true
+  esbuild: true
+  unrs-resolver: true
