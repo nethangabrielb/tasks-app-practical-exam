@@ -1,90 +1,104 @@
-# Vite + NestJS Monorepo Template
+# Tasks App
 
-A pnpm monorepo template providing a NestJS backend API, a Vite React frontend, and a PostgreSQL database layer managed by Prisma 7. This repository is intended as a clean, type-safe starter infrastructure to build fullstack applications on, not a finished product.
+A full-stack task management application built with NestJS, React, PostgreSQL, and Prisma in a pnpm monorepo.
+
+---
+
+## Tech Stack
+
+- **Frontend:** React 19, Vite, Tailwind CSS v4, shadcn/ui, TanStack Query
+- **Backend:** NestJS, Prisma 7, PostgreSQL
+- **Shared Packages:** Shared Zod validation schemas (`@repo/validators`), Prisma database client (`@repo/database`)
+
+---
 
 ## Prerequisites
 
-- **Node.js**: `>= 20` (Node 24 recommended)
-- **pnpm**: `11.20.0` (or `pnpm >= 11`)
-- **PostgreSQL**: A running local PostgreSQL instance or Docker container (`5432`)
+Make sure you have the following installed:
+
+- **Node.js** (v20 or higher)
+- **pnpm** (`npm install -g pnpm`)
+- **PostgreSQL** running locally on port `5432`
+
+---
+
+## Getting Started
+
+### 1. Clone & Install Dependencies
+
+```bash
+git clone <repository-url>
+cd tasks-app-practical-exam
+pnpm install
+```
+
+### 2. Configure Environment Variables
+
+Create a `.env` file in `packages/database/`:
+
+```bash
+cp packages/database/.env.example packages/database/.env
+```
+
+Open `packages/database/.env` and update your PostgreSQL connection string:
+
+```env
+DATABASE_URL="postgresql://postgres:password@localhost:5432/tasks_db"
+```
+
+### 3. Run Database Migrations
+
+Generate the Prisma client and apply migrations:
+
+```bash
+pnpm db:migrate
+```
+
+### 4. Start the Application
+
+Run both the backend API and frontend web app concurrently:
+
+```bash
+pnpm dev
+```
+
+- **Frontend:** [http://localhost:5173](http://localhost:5173)
+- **Backend API:** [http://localhost:3000](http://localhost:3000)
+
+---
+
+## Useful Commands
+
+| Command | Description |
+| :--- | :--- |
+| `pnpm dev` | Starts both frontend and backend concurrently in watch mode |
+| `pnpm dev:api` | Starts only the NestJS API |
+| `pnpm dev:web` | Starts only the Vite React app |
+| `pnpm build` | Builds all packages and apps for production |
+| `pnpm db:migrate` | Runs Prisma migrations in development |
+| `pnpm db:studio` | Opens Prisma Studio in browser to view/edit database records |
+| `pnpm lint` | Runs linter across all packages |
+
+---
 
 ## Project Structure
 
 ```text
 ├── apps/
-│   ├── api/                  # NestJS backend application
-│   └── web/                  # Vite + React frontend application
+│   ├── api/                  # NestJS backend API
+│   └── web/                  # Vite + React frontend
 └── packages/
-    ├── database/             # Prisma 7 schema, migrations, and client singleton
-    ├── typescript-config/    # Shared base TypeScript configurations
-    └── validators/           # Shared Zod validation schemas
+    ├── database/             # Prisma schema, migrations, and database client
+    ├── validators/           # Shared Zod schemas and TypeScript types
+    └── typescript-config/    # Shared TypeScript configs
 ```
 
-## First-Time Setup
+---
 
-1. **Clone the repository:**
-   ```bash
-   git clone <repository-url>
-   cd vite-nestjs-template
-   ```
+## Features
 
-2. **Install dependencies:**
-   ```bash
-   pnpm install
-   ```
-
-3. **Configure environment variables:**
-   ```bash
-   cp packages/database/.env.example packages/database/.env
-   ```
-   Open `packages/database/.env` and update `DATABASE_URL` with your PostgreSQL credentials:
-   ```env
-   DATABASE_URL="postgresql://postgres:password@localhost:5432/your_database"
-   ```
-
-4. **Generate the Prisma client:**
-   ```bash
-   pnpm --filter @repo/database db:generate
-   ```
-
-5. **Run database migrations:**
-   ```bash
-   pnpm run db:migrate
-   ```
-
-6. **Start development servers:**
-   ```bash
-   pnpm run dev
-   ```
-
-## Everyday Commands
-
-| Command | Description |
-| :--- | :--- |
-| `pnpm run dev` | Generates Prisma client, builds packages, and runs `api` and `web` concurrently in watch mode |
-| `pnpm run dev:api` | Starts only the NestJS API in watch mode |
-| `pnpm run dev:web` | Starts only the Vite React frontend dev server |
-| `pnpm run build` | Builds shared packages and compiles both applications for production |
-| `pnpm run db:migrate` | Applies Prisma migrations in development (`prisma migrate dev`) |
-| `pnpm run db:studio` | Opens Prisma Studio GUI in the browser to view and edit database data |
-| `pnpm run lint` | Runs ESLint across all workspace packages and apps |
-| `pnpm run format` | Formats all files across the repository with Prettier |
-
-## Default Ports
-
-- **Frontend (`apps/web`)**: [http://localhost:5173](http://localhost:5173) (includes proxying `/api` requests to backend)
-- **Backend API (`apps/api`)**: [http://localhost:3000](http://localhost:3000) (configurable via `PORT` environment variable)
-
-## Troubleshooting
-
-- **Port already in use (`EADDRINUSE`)**:
-  - *Cause*: A previous development process is still holding port 3000 or 5173.
-  - *Fix*: Free both ports by running `kill -9 $(lsof -t -i :3000 -i :5173) 2>/dev/null || true`.
-
-- **Database connection error (`P1001`)**:
-  - *Cause*: PostgreSQL is not running or credentials in `packages/database/.env` are incorrect.
-  - *Fix*: Start your PostgreSQL server and verify the connection string in `packages/database/.env`.
-
-- **Prisma Client module missing after clone or pull**:
-  - *Cause*: Prisma runtime client has not been generated into `packages/database/generated`.
-  - *Fix*: Run `pnpm --filter @repo/database db:generate && pnpm --filter @repo/database build`.
+- **Create & Manage Tasks:** Add tasks with optional descriptions, toggle completion status, and delete tasks.
+- **Search & Filter:** Search tasks in real-time by title/description and filter by status (All, Incomplete, Completed).
+- **End-to-End Type Safety:** Shared Zod schemas between frontend and backend to guarantee data validation.
+- **Confirmation Modals:** Deletion confirmation dialogs to prevent accidental deletes.
+- **Clean UI:** Responsive design built with Tailwind CSS v4 and shadcn/ui components.
