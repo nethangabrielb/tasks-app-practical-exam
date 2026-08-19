@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { toast } from "sonner";
 import { SquarePen, Trash } from "lucide-react";
+import { DeleteDialog } from "@/components/delete-dialog";
 
 const App = () => {
   const queryClient = useQueryClient();
@@ -86,6 +87,23 @@ const App = () => {
       return res.json();
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+  });
+
+  // mutation for deleting task
+  const deleteTaskMutation = useMutation({
+    mutationFn: async (taskId: number) => {
+      const res = await fetch(`/api/tasks/${taskId}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        throw new Error("Failed to delete task");
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      toast.success("Task deleted successfully");
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
@@ -194,11 +212,14 @@ const App = () => {
                 <SquarePen
                   size="16"
                   className="cursor-pointer text-muted-foreground"
+                  onClick={() => {
+                    updateTaskMutation.mutate(task.id);
+                  }}
                 ></SquarePen>
-                <Trash
-                  size="16"
-                  className="cursor-pointer text-muted-foreground"
-                ></Trash>
+                <DeleteDialog
+                  deleteTaskMutation={deleteTaskMutation}
+                  taskId={task.id}
+                />
               </div>
             </div>
           ))}
